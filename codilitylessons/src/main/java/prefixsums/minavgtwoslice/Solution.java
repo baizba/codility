@@ -5,32 +5,35 @@ package prefixsums.minavgtwoslice;
  */
 public class Solution {
 
-    public int solution(int[] A) {
-        int startPosition = 0;
-        float currentLowestAvg = Float.MAX_VALUE;
+    private int startPosition = 0;
+    private float currentLowestAvg = Float.MAX_VALUE;
 
-        int length = A.length;
-        for (int i = 0; i < length; i++) {
+    public int solution(int[] A) {
+        for (int i = 0; i < A.length; i++) {
             // slice with two elements
-            if (i + 1 < length) {
-                float twoMembersAvg = (float) (A[i] + A[i + 1]) / 2;
-                if (twoMembersAvg < currentLowestAvg) {
-                    currentLowestAvg = twoMembersAvg;
-                    startPosition = i;
-                }
-            }
+            setStartingPositionForSliceWithMinAverage(A, i, 2);
 
             // slice with three elements
-            if (i + 2 < length) {
-                float threeMembersAvg = (float) (A[i] + A[i + 1] + A[i + 2]) / 3;
-                if (threeMembersAvg < currentLowestAvg) {
-                    currentLowestAvg = threeMembersAvg;
-                    startPosition = i;
-                }
-            }
+            setStartingPositionForSliceWithMinAverage(A, i, 3);
         }
-
         return startPosition;
     }
 
+    private void setStartingPositionForSliceWithMinAverage(int[] array, int index, int sliceSize) {
+        float sliceAvg = 0;
+        if (sliceSize == 2 && index + 1 < array.length) {
+            sliceAvg = (float) (array[index] + array[index + 1]) / sliceSize;
+            setLastMinimumAvgPosition(index, sliceAvg);
+        } else if (sliceSize == 3 && index + 2 < array.length) {
+            sliceAvg = (float) (array[index] + array[index + 1] + array[index + 2]) / sliceSize;
+            setLastMinimumAvgPosition(index, sliceAvg);
+        }
+    }
+
+    private void setLastMinimumAvgPosition(int index, float sliceAvg) {
+        if (sliceAvg < currentLowestAvg) {
+            currentLowestAvg = sliceAvg;
+            startPosition = index;
+        }
+    }
 }
